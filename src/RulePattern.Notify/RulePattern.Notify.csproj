@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PackageId>RulePattern.Notify</PackageId>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RulePattern\RulePattern.csproj" />
+    </ItemGroup>
+</Project>

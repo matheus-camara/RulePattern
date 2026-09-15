@@ -1,0 +1,74 @@
+
+name: .NET 10 + Pack + Publish to NuGet
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pack-push:
+    environment: production
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      CAMINHO_PROJETO: ./src/RulePattern/RulePattern.csproj
+      CAMINHO_PROJETO_NOTIFY: ./src/RulePattern.Notify/RulePattern.Notify.csproj
+      OUTPUT: ./out
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore RulePattern.sln
+
+      - name: Build
+        run: dotnet build RulePattern.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test RulePattern.sln --configuration Release --no-build
+
+      - name: Pack RulePattern
+        run: |
+          dotnet pack ${{ env.CAMINHO_PROJETO }} \
+            --configuration Release \
+            --no-build \
+            --output ${{ env.OUTPUT }}
+
+      - name: Pack RulePattern.Notify
+        run: |
+          dotnet pack ${{ env.CAMINHO_PROJETO_NOTIFY }} \
+            --configuration Release \
+            --no-build \
+            --output ${{ env.OUTPUT }}
+
+      - name: List packages
+        run: ls -lh ${{ env.OUTPUT }}
+
+      - name: NuGet login
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push no NuGet
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          dotnet nuget push "${{ env.OUTPUT }}/*.nupkg" \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
