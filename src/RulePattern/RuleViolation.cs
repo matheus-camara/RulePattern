@@ -1,2 +1,3 @@
 namespace RulePattern;
-public sealed record RuleViolation(string Rule, string Message, string? Property = null);
+
+public sealed record RuleViolation(string Rule, string? Message = null, string? Property = null);
