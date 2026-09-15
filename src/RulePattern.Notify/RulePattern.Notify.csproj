@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>RulePattern.Notify</PackageId>
+        <Version>1.0.1</Version>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\RulePattern\RulePattern.csproj" />
