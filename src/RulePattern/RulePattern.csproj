@@ -4,5 +4,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <PackageId>RulePattern</PackageId>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 </Project>
